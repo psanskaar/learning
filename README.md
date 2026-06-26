@@ -4,7 +4,7 @@ A working collection of smart contract vulnerabilities, built, broken, and explo
 
 ## Why this repo exists
 
-Reading about a vulnerability class once and moving on doesn't build the instinct an auditor actually needs. This repo is the slower, more deliberate version: write the vulnerable contract from scratch, write the attacker from scratch, run it, and only move on once the result is fully explained, including the negative results. A test that fails for a reason you understand is worth more than ten contracts copied from a tutorial.
+Reading about a vulnerability class once and moving on doesn't build the instinct an auditor actually needs. This repo is the slower, more deliberate version: write the vulnerable contract from scratch, write the attacker from scratch, run it, and only move on once the result is fully explained, including the negative results.
 
 ## What's here
 
@@ -20,20 +20,20 @@ Reading about a vulnerability class once and moving on doesn't build the instinc
 forge test -vvv
 ```
 
-Every finding above has a matching test. Where relevant, the test proves both halves: that an honest user is correctly blocked, *and* that reentrancy gets through anyway. The contrast is the actual evidence, not just the final balance.
+Every finding above has a matching test. Where relevant, the test proves both halves: that an honest user is correctly blocked, *and* that reentrancy gets through anyway.
 
 ## Methodology
 
-Each contract is built to isolate exactly one root cause. Where a result could be confused with a different, unrelated bug (for instance, an attacker recursing into the same function it just exploited, rather than genuinely crossing into a second one), the victim contract is fixed so that path is structurally closed, not just left unattempted by a polite attacker. If an exploit succeeds, it's because the contract was incapable of stopping it, not because the attacker held back.
+Each contract is built to isolate exactly one root bug.
 
 ## Coming next
 
 - Cross-contract reentrancy
 - Read-only reentrancy
 - Access control
-- Arithmetic / precision (rounding and share-calculation errors, distinct from basic overflow)
+- Arithmetic / precision
 - Oracle manipulation
 
 ## About
 
-Built while working through Cyfrin Updraft's Solidity, Foundry, and smart contract security curriculum, toward a career in smart contract auditing.
+Built while working through Cyfrin Updraft's Solidity, Foundry, and smart contract security curriculum.
