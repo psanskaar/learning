@@ -8,11 +8,14 @@ Reading about a vulnerability class once and moving on doesn't build the instinc
 
 ## What's here
 
+## What's here
+
 | Category | Contract(s) | Result | Finding |
 |---|---|---|---|
-| Reentrancy: textbook | `reentrancy/textbook/textbook.sol` | ⚠️ Does not drain | Classic subtraction-based withdrawal ledger. Repeated reentrant calls underflow on unwind. Solidity 0.8+'s checked arithmetic forces a revert the moment you try to extract more than your ledger entitles you to, because over-extraction via fixed-amount subtraction *is* an underflow by definition. |
-| Reentrancy: textbook | `reentrancy/textbook/airdrop.sol` | ✅ Exploitable | One-time claim-flag pattern, no arithmetic anywhere. A boolean has no floor to underflow into, so repeated reentrant claims drain a fixed-reward pool with nothing to stop them. |
-| Reentrancy: cross-function | `reentrancy/cross-function/staking.sol` | ✅ Exploitable | Claiming a reward is supposed to lock the staker's principal for 7 days. A normal, honest user who claims and then tries to withdraw is correctly blocked. Reentrancy claims the reward and withdraws the full stake in the same transaction, before the lock is ever written, bypassing a security invariant that no honest sequence of calls can bypass. |
+| Reentrancy: textbook | `reentrancy/textbook/textbook.sol` | Does not drain | Subtraction-based withdrawal ledger. Repeated reentrant calls underflow on unwind. Solidity 0.8+ reverts before you can extract more than your entitlement, since over-extracting via fixed-amount subtraction is an underflow by definition. |
+| Reentrancy: textbook | `reentrancy/textbook/airdrop.sol` | Exploitable | One-time claim flag, no arithmetic involved. Booleans don't underflow, so repeated reentrant claims drain a fixed-reward pool with nothing to stop them. |
+| Reentrancy: cross-function | `reentrancy/cross-function/staking.sol` | Exploitable | Claiming a reward locks the stake for 7 days. Honest users who claim then try to withdraw get blocked correctly. Reentrancy claims the reward and withdraws the full stake in one transaction, before the lock is ever written. |
+
 
 ## Running it
 
@@ -20,7 +23,7 @@ Reading about a vulnerability class once and moving on doesn't build the instinc
 forge test -vvv
 ```
 
-Every finding above has a matching test. Where relevant, the test proves both halves: that an honest user is correctly blocked, *and* that reentrancy gets through anyway.
+Every finding above has a matching test. Where relevant, the test proves both halves: that an honest user is correctly blocked, *and* that attacker gets through anyway.
 
 ## Methodology
 
