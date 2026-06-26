@@ -8,8 +8,6 @@ Reading about a vulnerability class once and moving on doesn't build the instinc
 
 ## What's here
 
-## What's here
-
 | Category | Contract(s) | Result | Finding |
 |---|---|---|---|
 | Reentrancy: textbook | `reentrancy/textbook/textbook.sol` | Does not drain | Subtraction-based withdrawal ledger. Repeated reentrant calls underflow on unwind. Solidity 0.8+ reverts before you can extract more than your entitlement, since over-extracting via fixed-amount subtraction is an underflow by definition. |
