@@ -11,7 +11,7 @@ attacker withdraw staked
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import {staking} from "src/reentrancy/cross-function/staking_fixed.sol";
+import {staking} from "src/reentrancy/cross-function/staking.sol";
 
 contract attacker {
     staking public target;
