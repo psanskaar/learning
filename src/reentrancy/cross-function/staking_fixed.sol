@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-//THIS ONLY WORKS PRECISELY FOR VALUES WITH PRRFECT DIVISION BY 10,FOR EXAMPLE 100 ETH STAKED 
+//THIS ONLY WORKS PRECISELY FOR VALUES WITH PRRFECT DIVISION BY 10,FOR EXAMPLE 100 ETH STAKED
 /*
 
 A HONEST USER HAS HIS ACCOUNT BALANCE WITHDRAWL LOCKED FOR 7 DAYS AFTER WITHDRAWING REWARDS MEANWHILE AN ATTACKER CAN SIMPLY
@@ -9,6 +9,9 @@ THIS FIXED VERSION USES CLASSIC CEI PATTERN TO FIX THE BUG, TO TEST THE FIXED VE
 FROM staking.sol TO staking_fixed.sol
 
 CHANGES: users[msg.sender].time_of_unlock = block.timestamp + 7 days; ,is executed before call
+
+KNOWN SECONDARY ISSUE: WITHDRAW_ALL() DOES NOT ZERO INDIVIDUAL RECORDS, SO USER MAPPINGS REMAIN STALE AFTER A DRAIN,
+INTENTIONALLY LEFT UNFIXED TO KEEP THE DEMONSTRATION FOCUSED ON THE ACCESS CONTROL FINDING
 
 */
 
@@ -43,7 +46,7 @@ contract staking {
 
     function withdraw_staked() public returns (string memory) {
         require(
-            block.timestamp > users[msg.sender].time_of_unlock && users[msg.sender].staked>0,
+            block.timestamp > users[msg.sender].time_of_unlock && users[msg.sender].staked > 0,
             "Insufficient funds or Withdraw locked"
         );
         uint256 bal = users[msg.sender].staked;

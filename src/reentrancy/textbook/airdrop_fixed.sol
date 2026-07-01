@@ -13,7 +13,6 @@ CHANGES: ; record[msg.sender] = "claimed"; ,is executed before call
 
 */
 
-
 pragma solidity ^0.8.0;
 
 contract airdrop {

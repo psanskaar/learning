@@ -39,7 +39,7 @@ contract staking {
 
     function withdraw_staked() public returns (string memory) {
         require(
-            block.timestamp > users[msg.sender].time_of_unlock && users[msg.sender].staked>0,
+            block.timestamp > users[msg.sender].time_of_unlock && users[msg.sender].staked > 0,
             "Insufficient funds or Withdraw locked"
         );
         uint256 bal = users[msg.sender].staked;
